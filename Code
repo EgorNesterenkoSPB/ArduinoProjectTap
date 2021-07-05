@@ -1,0 +1,47 @@
+#include <Ultrasonic.h>
+int trigPin=6;
+int echoPin=5; 
+int TW=0;// temperature of water
+int TU=0;//temperature of user
+int turn=0; //turn to set temperature
+void setup() {
+Serial.begin(9600);  
+pinMode(trigPin,OUTPUT);
+pinMode(echoPin,INPUT);
+}
+void loop() {
+int duration;
+int cm;
+digitalWrite(trigPin,OUTPUT);
+delayMicroseconds(2);
+digitalWrite(trigPin,HIGH); //to send signal
+delayMicroseconds(10);
+digitalWrite(trigPin,LOW);
+duration=pulseIn(echoPin,HIGH); // get distance
+cm=duration/58; //conversion to CM
+  //Serial.print(cm);
+  //Serial.println("cm");
+  if(TW-TU>8) //difference 8 degree Ceslius
+  {
+    turn=turn+15; //cooling
+  }
+else if (TW-TU<-8) //difference -8 degree Ceslius
+{
+  turn=turn-15; //heating
+}
+   else if (TW-TU>1 && TW-TU<-1)
+   {
+   break;
+   }
+  else if(TW-TU>0 && TW-TU<-8)
+  {
+    turn=turn-15;//heating
+  }
+  else //if (TW-TU>0 && TW-TU<8) we dont write it because it have to use 'else'
+  {
+    turn=turn+5; //cooling
+  }
+  
+  delay(1000);
+     
+}
